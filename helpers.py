@@ -6,6 +6,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi
 from langchain import OpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.docstore.document import Document
 from langchain.embeddings import OpenAIEmbeddings
 import numpy as np

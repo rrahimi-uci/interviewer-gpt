@@ -53,3 +53,14 @@ Create beautiful response like the follwoing format:
 ----------------------------------------------------------------------------------------------------
 ...
 '''
+
+ai_answer_promt ='''
+Consider yourself as a candidate for software engineering manageral role. 
+We ask you question in []: [{interview_question_asked}]
+Please answer the mentioned question based on the following instructions:
+
+1) Make sure you provide a high level hypothetical answer to the question first.
+2) Support your answer with a acceptable story related to the question.
+
+limit your answer to less than 500 words.
+'''

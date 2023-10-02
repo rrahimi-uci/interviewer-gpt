@@ -11,8 +11,6 @@ with open('resources/random_story.txt', 'r') as f:
 # it is relevant to the leadership principles.
 leadership_principles = read_json_file('resources/leadership_principles.json')
 
-question = ''
-
 def generate_random_question():
             question = get_random_interview_question()
             return question
@@ -22,7 +20,11 @@ llm = OpenAI(temperature = TEMPERTURE,
              max_tokens = MAX_TOKENS, 
              openai_api_key = OPENAI_API_KEY)
 
-def evaluate_by_ai_interviewer(candidate_response_str):
+chat = ChatOpenAI(model_name="gpt-3.5-turbo", 
+                 max_tokens = MAX_TOKENS, 
+                openai_api_key = OPENAI_API_KEY)
+
+def evaluate_by_ai_interviewer(candidate_response_str, random_question):
             
             # Summarize the candidate response to the question
             summarized_response_str = summarize_response(candidate_response_str)
@@ -34,7 +36,7 @@ def evaluate_by_ai_interviewer(candidate_response_str):
             )
             interview_question_query = interview_question_prompt_template.format(
                     candidate_response = summarized_response_str,
-                    interview_question_asked = question
+                    interview_question_asked = random_question
                 )
 
             check_leadership_principle_prompt_template = PromptTemplate(
@@ -48,17 +50,20 @@ def evaluate_by_ai_interviewer(candidate_response_str):
                 leadership_principles = json.dumps(leadership_principles))
 
             sorted_tuple_list = calculate_similarity_to_leadership_principles(leadership_principles, summarized_response_str, random_story)
-    
-            data =  generate_pandas_df_from_dict(sorted_tuple_list) 
+
+            print(random_question) 
+            data =  generate_pandas_df_from_dict(sorted_tuple_list)
+            print(ai_answer_promt.format(interview_question_asked = random_question)) 
             
             return { ai_evaluation:llm(interview_question_query),
                     ai_detailed_evaluation:llm(check_leadership_principle_prompt),
-                    ai_similarity_analysis:data}
+                    ai_similarity_analysis:data,
+                    ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question)) }
 
 with gr.Blocks() as coach_gpt_gradio_ui:
     gr.Markdown(
     """
-    # 🎤Welcome to the AI Behavioral Interviewer for Software Engineers, Managers and Product engineers
+    # 🎤 Welcome to the AI Behavioral Interviewer for Software Engineers and Managers
     
     ## 📝 Instructions :
 
@@ -74,12 +79,12 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     
     """)
     with gr.Column():
-        btn_random_question = gr.Button("Generate Random Question")
+        btn_random_question = gr.Button("Generate Random Interview Question")
         random_question = gr.Textbox(label="Behavioral Interview Question", )
-        candidate_response_str = gr.Textbox(label="Candidate Response", lines=20)
-        evaluate_by_ai = gr.Button("Evaluate By AI Interviewer")
-        ai_evaluation = gr.Textbox(label= 'General Evaluation', lines=10)
-        ai_detailed_evaluation = gr.Textbox(label= 'Details Considering Different Leadership Principles', lines=20)
+        candidate_response_str = gr.Textbox(label="Candidate Response", lines=10)
+        evaluate_by_ai = gr.Button("AI Evaluation of the Candidate Response")
+        ai_evaluation = gr.Textbox(label= 'High-Level Evaluation', lines=10)
+        ai_detailed_evaluation = gr.Textbox(label= 'Details Considering Different Leadership Principles', lines=10)
         ai_similarity_analysis= gr.BarPlot( x = "Leadership Principles",
                                             y = "Percentage",
                                             x_title = "Leadership Principles",
@@ -88,15 +93,16 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                                             vertical = False,
                                             height= 600,
                                             width= 1000)
-
+        ai_answer = gr.Textbox(label= 'AI answer to the question', lines=10)
+        
         btn_random_question.click(fn=generate_random_question, 
                                   outputs=[random_question], 
                                   api_name="generate_random_question")
 
         evaluate_by_ai.click(
                   fn=evaluate_by_ai_interviewer, 
-                  inputs=[candidate_response_str], 
-                  outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis], 
+                  inputs=[candidate_response_str, random_question], 
+                  outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis, ai_answer], 
                   api_name="evaluate_by_ai_interviewer")
 
 coach_gpt_gradio_ui.launch(share=True, 
