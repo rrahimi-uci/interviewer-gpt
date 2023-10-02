@@ -8,12 +8,12 @@ The repository is structured as follows:
 
 - `outputs/`: contains general evaluation and detail evaluation when you are using test.py for review.
 - `resources/`: It contains imporatnt files related to the application.
-    -'conf.env/': contains important configuration. You need to update your openAI key to work.
-    -'interview_questions.db': db that contains question. It is SQLite db
-    -'interview_youtube.txt': sample interview results that we used in test.py and notebook
-    -'leadership_principles.json': It contains Amazon leadership principles in json format. 
-    -'random_story.txt': it is a random story which is used as the basedline for comparing similarity to leadership principles.
-    -'sample_behavioral_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db. 
+    1. 'conf.env/': contains important configuration. You need to update your openAI key to work.
+    2. 'interview_questions.db': db that contains question. It is SQLite db
+    3. 'interview_youtube.txt': sample interview results that we used in test.py and notebook
+    4. 'leadership_principles.json': It contains Amazon leadership principles in json format. 
+    5. 'random_story.txt': it is a random story which is used as the basedline for comparing similarity to leadership principles.
+    6. 'sample_behavioral_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db. 
 - `coachgpt-poc.ipynb/`: This notebook has everything related to this app for testing.
 - `coachgpt-poc.py/`: gradio app to run.
 - `helpers.py/`: Helper functions and classes that are needed.
