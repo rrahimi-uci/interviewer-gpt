@@ -51,14 +51,14 @@ def evaluate_by_ai_interviewer(candidate_response_str, random_question):
 
             sorted_tuple_list = calculate_similarity_to_leadership_principles(leadership_principles, summarized_response_str, random_story)
 
-            print(random_question) 
+            #print(random_question) 
             data =  generate_pandas_df_from_dict(sorted_tuple_list)
-            print(ai_answer_promt.format(interview_question_asked = random_question)) 
+            #print(ai_answer_promt.format(interview_question_asked = random_question)) 
             
             return { ai_evaluation:llm(interview_question_query),
                     ai_detailed_evaluation:llm(check_leadership_principle_prompt),
                     ai_similarity_analysis:data,
-                    ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question)) }
+                    ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question) )}
 
 with gr.Blocks() as coach_gpt_gradio_ui:
     gr.Markdown(
@@ -67,16 +67,16 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     
     ## 📝 Instructions :
 
-    1) Click on the button "Generate Random Question" to generate a random question.
-    2) Click on the button "Evaluate By AI Interviewer" to evaluate the candidate response.
+    1) Click on the button "Generate Random Interview Question" to generate a random question.
+    2) Click on the button "AI Evaluation of the Candidate Response" to evaluate the candidate response.
     
     ## 📊 AI Analysis Inerpretation :
     
     The evaluation result will be displayed in the text box "General Evaluation" and "Details Considering Different 
-    Leadership Principles". The decomposed response to leadership principles will be displayed in the image part using cosine 
+    Leadership Principles". The decomposed response to leadership principles will be displayed in the hart part using cosine 
     similarity for more insigths. It gives you a sense of how the candidate response is related/ranked to different leadership 
-    principles. 
-    
+    principles. Finally we provide the AI answer to the question to give you a sense of how the AI would answer the question for your
+    reference.
     """)
     with gr.Column():
         btn_random_question = gr.Button("Generate Random Interview Question")
@@ -107,4 +107,5 @@ with gr.Blocks() as coach_gpt_gradio_ui:
 
 coach_gpt_gradio_ui.launch(share=True, 
                            width=600, 
-                           height=600)
+                           height=600,
+                           )
