@@ -63,21 +63,27 @@ def evaluate_by_ai_interviewer(candidate_response_str, random_question):
 with gr.Blocks() as coach_gpt_gradio_ui:
     gr.Markdown(
     """
-    # 🎤 Welcome to the AI Behavioral Interviewer for Software Engineers and Managers
+    # 🎤 Welcome to the AI Behavioral Interviewer for Software Engineer Leaders and Managers
     
     ## 📝 Instructions :
 
-    1) Click on the button "Generate Random Interview Question" to generate a random question.
-    2) Click on the button "AI Evaluation of the Candidate Response" to evaluate the candidate response.
+    1) Click on the button "Generate Random Interview Question" to generate a random interview question.
+    2) Enter your response to the question. Try to use less than 500 words.
+    2) Click on the button "AI Evaluation of the Candidate Response" to evaluate the your response.
     
     ## 📊 AI Analysis Inerpretation :
     
-    The evaluation result will be displayed in the text box "General Evaluation" and "Details Considering Different 
-    Leadership Principles". The decomposed response to leadership principles will be displayed in the hart part using cosine 
-    similarity for more insigths. It gives you a sense of how the candidate response is related/ranked to different leadership 
-    principles. Finally we provide the AI answer to the question to give you a sense of how the AI would answer the question for your
-    reference.
+    The high-level evaluation result will be displayed in the text box "General Evaluation". We also provide you "Details Considering Different 
+    Leadership Principles". These principle are based on Amazon leadership principle which are accepted in software industry as a guidline.
+
+    The decomposed response to leadership principles will be displayed in the chart part using cosine 
+    similarity for more insigths. It gives you a sense of how your response is related/ranked to different leadership 
+    principles. 
+    
+    Finally we provide the AI answer to the question to give you a sense of how the AI would answer the question for your 
+    reference and guidline.
     """)
+    
     with gr.Column():
         btn_random_question = gr.Button("Generate Random Interview Question")
         random_question = gr.Textbox(label="Behavioral Interview Question", )
