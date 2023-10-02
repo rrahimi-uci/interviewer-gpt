@@ -35,8 +35,8 @@ is the definition of the leadership principle.
 Question : Is candidate response relevant to this leadership principles?.
 
 Instructions:
-1) Validate your answer by highlighting the related text from the candidate response.
-2) Your Response should be less than 100 words.
+1) Validate your answer by highlighting the related text extracted from the candidate response.
+2) Your Response should be less than 200 words.
 3) Use the format of principle name and your answer. 
 
 For example, if you think the candidate response is relevant to the leadership principle "Customer Obsession", then your answer 
@@ -56,7 +56,8 @@ Create beautiful response like the follwoing format:
 
 ai_answer_promt ='''
 Consider yourself as a candidate for software engineering manageral role. 
-We ask you question in []: [{interview_question_asked}]
+We ask you question : {interview_question_asked}
+
 Please answer the mentioned question based on the following instructions:
 
 1) Make sure you provide a high level hypothetical answer to the question first.
