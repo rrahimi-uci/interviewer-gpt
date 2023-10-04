@@ -5,8 +5,7 @@ Question: How do you evaluate the candidate's response?
 
 Instructions:
 
-1) The story should be specific about an industrial project in the domain of 
-   engineering, product, or marketing.
+1) The story should be related to engineering, product, or marketing experience.
 2) The story should be clear and easy to understand.
 3) The story should be relevant to the question.
 
@@ -16,7 +15,8 @@ Your general ranking should be only one of these choices:
 
 1) weak, 
 2) average, 
-3) strong
+3) Good,
+4) Excellent
 
 With the Explanation of your ranking. Create a response like the following format:
 
@@ -63,5 +63,5 @@ Please answer the mentioned question based on the following instructions:
 1) Make sure you provide a high level hypothetical answer to the question first.
 2) Support your answer with a acceptable story related to the question.
 
-limit your answer to less than 500 words.
+limit your answer to less than 1000 words.
 '''
