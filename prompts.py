@@ -1,16 +1,16 @@
-interview_question_prompt = ''' We asked a candidate an interview question of {interview_question_asked}. 
-Here is the summarized response: {candidate_response} 
+interview_question_prompt = ''' We asked a candidate an interview question of {interview_question_asked}.
+Here is the summarized response: {candidate_response}
 
-Question : How do you evaluate the candidate's response?
+Question: How do you evaluate the candidate's response?
 
 Instructions:
 
 1) The story should be specific about an industrial project in the domain of 
-   engineering, product or marketing.
+   engineering, product, or marketing.
 2) The story should be clear and easy to understand.
 3) The story should be relevant to the question.
 
-Please use the following template for your response :
+Please use the following template for your response:
 
 Your general ranking should be only one of these choices:
 
@@ -18,9 +18,9 @@ Your general ranking should be only one of these choices:
 2) average, 
 3) strong
 
-With the Explanation of your ranking. Create response like the follwoing format:
+With the Explanation of your ranking. Create a response like the following format:
 
-"ranking": "week"; 
+"ranking": "weak"; 
 "ai-explanation": "your explanation"
 '''
 
