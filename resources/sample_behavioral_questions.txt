@@ -14,6 +14,29 @@ What was some difficult feedback that you received? and why was it hard to recei
 How do you decide when to hire someone on your team? How do you decide whether to hire externally or fill the role with an internal candidate?
 How do you go about finding the right candidates for your role? 
 How do you deal with unhappy people on your team ? 
+Big lessons that you learned as an engineering manager
+What have you personally done to increase diversity and inclusion on your team?
+How do you build trust with your team?
+What do you do to build a safe and inclusive atmosphere in your team?
+How do you coach engineers on your team that are smarter and better engineers than you?
+Projects that you failed and what did you learn?
+What is the toughest lesson that you learned as a manager?
+What is your approach to hiring and recruiting?
+What are the biggest challenges you face as an engineering leader?
+Tell me about a time when you were in danger of missing a deadline. What did you do?
+How do you keep pushing your team to do more while not burning them out?
+Tell me about a time when you’ve disagreed with your boss yet you committed to their plan.
+Tell me about a time when requirements changed mid-way in the project?
+Tell me about a time when you had to balance product priorities with reducing technical debt.
+Tell me about a project you're proud of. Talk about a project retro and summarize them to answer these question
+
+
+
+
+
+
+
+
 
 
 
