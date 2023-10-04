@@ -25,19 +25,7 @@ What is your approach to hiring and recruiting?
 What are the biggest challenges you face as an engineering leader?
 Tell me about a time when you were in danger of missing a deadline. What did you do?
 How do you keep pushing your team to do more while not burning them out?
-Tell me about a time when you’ve disagreed with your boss yet you committed to their plan.
+Tell me about a time when you have disagreed with your boss yet you committed to their plan.
 Tell me about a time when requirements changed mid-way in the project?
 Tell me about a time when you had to balance product priorities with reducing technical debt.
-Tell me about a project you're proud of. Talk about a project retro and summarize them to answer these question
-
-
-
-
-
-
-
-
-
-
-
-
+Tell me about a project you are proud of. Talk about a project retro and summarize them to answer these question.

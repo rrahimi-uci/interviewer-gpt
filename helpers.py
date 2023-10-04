@@ -106,7 +106,7 @@ class DbOps:
             lines = f.readlines()
        
        for line in lines:
-            question = line.strip()
+            question = line.strip().lower()
             self.add_question(question)
 
 def get_random_interview_question():
