@@ -22,7 +22,7 @@ llm = OpenAI(temperature = TEMPERTURE,
 
 chat = ChatOpenAI(model_name="gpt-3.5-turbo", 
                  max_tokens = MAX_TOKENS, 
-                openai_api_key = OPENAI_API_KEY)
+                 openai_api_key = OPENAI_API_KEY)
 
 def evaluate_by_ai_interviewer(candidate_response_str, random_question):
             
@@ -55,8 +55,8 @@ def evaluate_by_ai_interviewer(candidate_response_str, random_question):
             data =  generate_pandas_df_from_dict(sorted_tuple_list)
             #print(ai_answer_promt.format(interview_question_asked = random_question)) 
             
-            return { ai_evaluation:llm(interview_question_query),
-                    ai_detailed_evaluation:llm(check_leadership_principle_prompt),
+            return { ai_evaluation:chat.predict(interview_question_query),
+                    ai_detailed_evaluation:chat.predict(check_leadership_principle_prompt),
                     ai_similarity_analysis:data,
                     ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question) )}
 
@@ -67,21 +67,28 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     
     ## 📝 Instructions :
 
-    1) Click on the button "Generate Random Interview Question" to generate a random interview question.
-    2) Enter your response to the question. Try to use less than 500 words.
-    2) Click on the button "AI Evaluation of the Candidate Response" to evaluate the your response.
+    1) Click on the button "**Generate Random Interview Question**" to generate a random interview question.
+    2) Enter your response to the question. Try to use less than **1000** words.
+    2) Click on the button "**AI Evaluation of the Candidate Response**" to evaluate the your response.
     
     ## 📊 AI Analysis Inerpretation :
     
-    The high-level evaluation result will be displayed in the text box "General Evaluation". We also provide you "Details Considering Different 
-    Leadership Principles". These principle are based on Amazon leadership principle which are accepted in software industry as a guidline.
+    The high-level evaluation result will be displayed in the text box "General Evaluation". It will rank the answer to:
+
+        1) weak, 
+        2) average, 
+        3) Good,
+        4) Excellent
+    
+    We also provide you "**Details Considering Different Leadership Principles**". These principle are based 
+    on Amazon leadership principle which are accepted in software industry as a guidline.
 
     The decomposed response to leadership principles will be displayed in the chart part using cosine 
-    similarity for more insigths. It gives you a sense of how your response is related/ranked to different leadership 
-    principles. 
+    similarity for more insigths. It gives you a sense of how your response is related/ranked to different 
+    leadership principles. 
     
-    Finally we provide the AI answer to the question to give you a sense of how the AI would answer the question for your 
-    reference and guidline.
+    Finally we provide the AI answer to the question to give you a sense of how the AI would answer the question 
+    for your reference and guidline.
     """)
     
     with gr.Column():
