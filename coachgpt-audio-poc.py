@@ -1,6 +1,7 @@
 from helpers import *
 from prompts import *
 import gradio as gr
+from transformers import pipeline
 
 # Open the random story response. It is used to define the baseline of similarity 
 # between the candidate response and random story.
@@ -60,6 +61,16 @@ def evaluate_by_ai_interviewer(candidate_response_str, random_question):
                     ai_similarity_analysis:data,
                     ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question) )}
 
+transcriber = pipeline("automatic-speech-recognition", model="openai/whisper-base.en")
+
+def transcribe(audio):
+    sr, y = audio
+    y = y.astype(np.float32)
+    y /= np.max(np.abs(y))
+
+    return transcriber({"sampling_rate": sr, "raw": y})["text"]
+
+
 with gr.Blocks() as coach_gpt_gradio_ui:
     gr.Markdown(
     """
@@ -68,8 +79,9 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     ## 📝 Instructions :
 
     1) Click on the button "**Generate Random Interview Question**" to generate a random interview question.
-    2) Enter your response to the question. Try to use less than **1000** words.
-    2) Click on the button "**AI Evaluation of the Candidate Response**" to evaluate the your response.
+    2) You can record your answer and then we will do transcription OR Enter your response to the question. Try to use 
+       less than **1000** words.
+    3) Click on the button "**AI Evaluation of the Candidate Response**" to evaluate the your response.
     
     ## 📊 AI Analysis Inerpretation :
     
@@ -94,6 +106,10 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     with gr.Column():
         btn_random_question = gr.Button("Generate Random Interview Question")
         random_question = gr.Textbox(label="Behavioral Interview Question", )
+        candidate_response_audio_input = gr.Audio(label="Record Your Response", 
+                                                  type="numpy", 
+                                                  source="microphone", 
+                                                  preprocess=transcribe,)
         candidate_response_str = gr.Textbox(label="Candidate Response", lines=10)
         evaluate_by_ai = gr.Button("AI Evaluation of the Candidate Response")
         ai_evaluation = gr.Textbox(label= 'High-Level Evaluation', lines=10)
@@ -111,6 +127,11 @@ with gr.Blocks() as coach_gpt_gradio_ui:
         btn_random_question.click(fn=generate_random_question, 
                                   outputs=[random_question], 
                                   api_name="generate_random_question")
+        
+        candidate_response_audio_input.stop_recording(fn=transcribe, 
+                                            inputs=[candidate_response_audio_input],
+                                            outputs=[candidate_response_str], 
+                                            api_name="audio_transcribe")
 
         evaluate_by_ai.click(
                   fn=evaluate_by_ai_interviewer, 
@@ -118,7 +139,4 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                   outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis, ai_answer], 
                   api_name="evaluate_by_ai_interviewer")
 
-coach_gpt_gradio_ui.launch(share=True, 
-                           width=600, 
-                           height=600,
-                           )
+coach_gpt_gradio_ui.launch(share=True, width=600, height=600)
