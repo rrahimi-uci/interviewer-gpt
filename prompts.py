@@ -13,14 +13,14 @@ Please use the following template for your response:
 
 Your general ranking should be only one of these choices:
 
-1) weak, 
-2) average, 
+1) Weak, 
+2) Average, 
 3) Good,
 4) Excellent
 
 With the Explanation of your ranking. Create a response like the following format:
 
-"ranking": "weak"; 
+"ranking": "Weak"; 
 "ai-explanation": "your explanation"
 '''
 
