@@ -61,14 +61,19 @@ def evaluate_by_ai_interviewer(candidate_response_str, random_question):
                     ai_similarity_analysis:data,
                     ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question) )}
 
-transcriber = pipeline("automatic-speech-recognition", model="openai/whisper-base.en")
+transcriber = pipeline("automatic-speech-recognition", model="openai/whisper-base.en", max_new_tokens = 1000)
 
 def transcribe(audio):
     sr, y = audio
     y = y.astype(np.float32)
     y /= np.max(np.abs(y))
 
-    return transcriber({"sampling_rate": sr, "raw": y})["text"]
+    res = ''
+    splited_audio = np.array_split(y, 10)
+    for audio_chunck in splited_audio:
+        res += transcriber({"sampling_rate": sr, "raw": audio_chunck})["text"]
+    
+    return res
 
 
 with gr.Blocks() as coach_gpt_gradio_ui:
@@ -85,7 +90,7 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     
     ## 📊 AI Analysis Inerpretation :
     
-    The high-level evaluation result will be displayed in the text box "General Evaluation". It will rank the answer to:
+    The high-level evaluation result will be displayed in the text box "**General Evaluation**". It will rank the answer to:
 
         1) Weak, 
         2) Average, 
@@ -93,7 +98,7 @@ with gr.Blocks() as coach_gpt_gradio_ui:
         4) Excellent
     
     We also provide you "**Details Considering Different Leadership Principles**". These principle are based 
-    on Amazon leadership principle which are accepted in software industry as a guidline.
+    on [**Amazon leadership principle**](https://www.amazon.jobs/content/en/our-workplace/leadership-principles 'Amazon leadership principle') which are accepted in software industry as a guidline.
 
     The decomposed response to leadership principles will be displayed in the chart part using cosine 
     similarity for more insigths. It gives you a sense of how your response is related/ranked to different 
@@ -108,8 +113,8 @@ with gr.Blocks() as coach_gpt_gradio_ui:
         random_question = gr.Textbox(label="Behavioral Interview Question", )
         candidate_response_audio_input = gr.Audio(label="Record Your Response", 
                                                   type="numpy", 
-                                                  source="microphone", 
-                                                  preprocess=transcribe,)
+                                                  source="microphone",
+                                                  show_download_button=True)
         candidate_response_str = gr.Textbox(label="Candidate Response", lines=10)
         evaluate_by_ai = gr.Button("AI Evaluation of the Candidate Response")
         ai_evaluation = gr.Textbox(label= 'High-Level Evaluation', lines=10)
@@ -139,4 +144,4 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                   outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis, ai_answer], 
                   api_name="evaluate_by_ai_interviewer")
 
-coach_gpt_gradio_ui.launch(share=True, width=600, height=600)
+coach_gpt_gradio_ui.launch(share=True, width=600, height=600, debug=True)
