@@ -36,7 +36,7 @@ Question : Is candidate response relevant to this leadership principles?.
 
 Instructions:
 1) Validate your answer by highlighting the related text extracted from the candidate response.
-2) Your Response should be less than 200 words.
+2) Your Response should be less than 1500 words.
 3) Use the format of principle name and your answer. 
 
 For example, if you think the candidate response is relevant to the leadership principle "Customer Obsession", then your answer 
@@ -63,5 +63,5 @@ Please answer the mentioned question based on the following instructions:
 1) Make sure you provide a high level hypothetical answer to the question first.
 2) Support your answer with a acceptable story related to the question.
 
-limit your answer to less than 1000 words.
+limit your answer to less than 2000 words.
 '''

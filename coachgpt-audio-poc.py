@@ -2,6 +2,7 @@ from helpers import *
 from prompts import *
 import gradio as gr
 from transformers import pipeline
+import threading
 
 # Open the random story response. It is used to define the baseline of similarity 
 # between the candidate response and random story.
@@ -49,17 +50,27 @@ def evaluate_by_ai_interviewer(candidate_response_str, random_question):
             check_leadership_principle_prompt = check_leadership_principle_prompt_template.format(
                 candidate_response = summarized_response_str,
                 leadership_principles = json.dumps(leadership_principles))
-
-            sorted_tuple_list = calculate_similarity_to_leadership_principles(leadership_principles, summarized_response_str, random_story)
-
-            #print(random_question) 
-            data =  generate_pandas_df_from_dict(sorted_tuple_list)
-            #print(ai_answer_promt.format(interview_question_asked = random_question)) 
             
-            return { ai_evaluation:chat.predict(interview_question_query),
-                    ai_detailed_evaluation:chat.predict(check_leadership_principle_prompt),
+            # Do multi-threading to speed up the process
+            ai_evaluation_thread = ReturnValueThread(target=chat.predict, args=(interview_question_query,))
+            ai_detailed_evaluation_thread = ReturnValueThread(target=chat.predict, args=(check_leadership_principle_prompt,))
+            ai_answer_thread = ReturnValueThread(target=chat.predict, args=(ai_answer_promt.format(interview_question_asked = random_question),)) 
+            sorted_tuple_list_thread = ReturnValueThread(target=calculate_similarity_to_leadership_principles, args=(leadership_principles, summarized_response_str, random_story))
+
+            ai_evaluation_thread.start()
+            ai_detailed_evaluation_thread.start()
+            ai_answer_thread.start()
+            sorted_tuple_list_thread.start()
+
+            ai_evaluation_thread_res = ai_evaluation_thread.join()
+            ai_detailed_evaluation_thread_res = ai_detailed_evaluation_thread.join()
+            ai_answer_thread_res = ai_answer_thread.join()
+            data = generate_pandas_df_from_dict(sorted_tuple_list_thread.join())
+            
+            return { ai_evaluation:ai_evaluation_thread_res,
+                    ai_detailed_evaluation:ai_detailed_evaluation_thread_res,
                     ai_similarity_analysis:data,
-                    ai_answer:chat.predict(ai_answer_promt.format(interview_question_asked = random_question) )}
+                    ai_answer:ai_answer_thread_res}
 
 transcriber = pipeline("automatic-speech-recognition", model="openai/whisper-base.en", max_new_tokens = 1000)
 
