@@ -1,4 +1,4 @@
-# coach-gpt
+# interviewer-gpt
 
 This repository contains a collection of notebooks and associated code components designed for the GPT-powered application, specifically tailored to serve as a Behavioral Interview Assistant.
 
