@@ -153,7 +153,7 @@ def change_choice(choice):
 with gr.Blocks() as coach_gpt_gradio_ui:
     gr.Markdown(
     """
-    # 🎤 Welcome to the 🧘🏻‍♂️ **Guru**, your AI Interviewer for ML Engineering Leaders and Manageral roles!
+    # 🎤 Welcome to the 🧘🏻‍♂️ **Guru**, your AI Interviewer for ML Engineering Leadership and Manageral roles!
     
     ## 🤔 How it Works :
 
