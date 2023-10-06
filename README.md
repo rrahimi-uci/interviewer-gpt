@@ -12,7 +12,9 @@ The repository is structured as follows:
     3. 'interview_youtube.txt': sample interview results that we used in test.py and notebook
     4. 'leadership_principles.json': It contains Amazon leadership principles in json format. 
     5. 'random_story.txt': it is a random story which is used as the basedline for comparing similarity to leadership principles.
-    6. 'sample_behavioral_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db. 
+    6. 'sample_behavioral_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db.
+    7. 'sample_coding_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db. 
+    8. 'sample_coding_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db.  
 - `coachgpt-app.py/`: gradio app to run.
 - 'utility/'
     1. 'helpers.py/`: Helper functions and classes that are needed.

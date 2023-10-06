@@ -1,0 +1,15 @@
+Design a recommendation system for an e-commerce website that suggests products to users based on their browsing and purchase history.
+Design a fraud detection system for a financial institution that uses machine learning to identify and prevent fraudulent transactions.
+Design a natural language processing system that can classify customer support tickets and route them to the appropriate department for resolution.
+Design a recommendation system for a music streaming platform like Spotify, considering user listening history, music catalog, and personalization.
+Design an entity recognistion system.
+Design a recommendation system for a music streaming platform like Spotify, considering user listening history, music catalog, and personalization.
+Design a system for AD targetting.
+Design a news feed system.
+Design a machine learning system for automated image tagging and categorization in a photo-sharing platform.
+How do you build a machine learning-powered chatbot for customer support, and what components would it include?
+Describe the design of a predictive maintenance system for manufacturing equipment, utilizing machine learning to predict when maintenance is needed.
+How would you design a content moderation system for a social media platform, incorporating machine learning to identify and filter out inappropriate content?
+Explain the architecture of a natural language processing (NLP) system for sentiment analysis of customer reviews.
+How do you build a machine learning system to identify and filter spam emails in an email service?
+Describe the design of a healthcare diagnostic system that uses machine learning to assist doctors in diagnosing medical conditions.
