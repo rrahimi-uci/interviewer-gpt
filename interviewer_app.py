@@ -169,54 +169,54 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     leadership principles. 
     6) Once you are done with the question and answers you can clear the board and start over.
 
-    ## 📊 AI Analysis Inerpretation :
+    ## 📊 Guru Analysis Inerpretation :
     
-    The high-level evaluation result will be displayed in the text box "**General Evaluation**". It will rank the answer to:
+    the high-level evaluation result will be displayed in the text box "**general evaluation**". it will rank the answer to:
 
-        1) Weak, 
-        2) Average, 
-        3) Good,
-        4) Excellent
+        1) weak, 
+        2) average, 
+        3) good,
+        4) excellent
     
-    We also provide the AI answer to the question to give you a sense of how the AI would answer the question for your 
+    we also provide the ai answer to the question to give you a sense of how the ai would answer the question for your 
     reference and learning.
     """)
     
     with gr.Column():
         question_choices = gr.Radio(
-        ["Leadership and Behavioural Question", "ML System Design Question", "Coding Question"], 
-        label = "🧘🏻‍♂️ What kind of question do you want me to ask?",
-        value = "Leadership and Behavioural Question")
+        ["leadership and behavioural question", "ml system design question", "coding question"], 
+        label = "🧘🏻‍♂️ what kind of question do you want me to ask?",
+        value = "leadership and behavioural question")
          
-        btn_random_question = gr.Button("🎲 Generate Me Random Interview Question")
-        random_question = gr.Textbox(label="❓Interview Question", )
+        btn_random_question = gr.Button("🎲 Generate me random a interview question")
+        random_question = gr.Textbox(label="❓interview question", )
         
         with gr.Column(visible=True) as audio_visibility:
-            candidate_response_audio_input = gr.Audio(label="Record Your Response", 
+            candidate_response_audio_input = gr.Audio(label="record your response", 
                                                   type="numpy", 
                                                   source="microphone",
                                                   show_download_button=True,
                                                   interactive=True,)
-        candidate_response_str = gr.Textbox(label="📝 Your Response", lines=20)
+        candidate_response_str = gr.Textbox(label="📝 Your response", lines=20)
         
-        evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru Evaluation of the Response")
-        ai_evaluation = gr.Textbox(label= '🔍 High-Level Evaluation', lines=20)
+        evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru evaluation of the response")
+        ai_evaluation = gr.Textbox(label= '🔍 high-level evaluation', lines=20)
         
         with gr.Column(visible=True) as behavioral_evaluation_visibility:
-            ai_detailed_evaluation = gr.Textbox(label= '📑 Details Considering Amazon Leadership Principles', 
+            ai_detailed_evaluation = gr.Textbox(label= '📑 Details considering Amazon leadership principles', 
                                             lines=20, 
                                             interactive=True)
-            ai_similarity_analysis= gr.BarPlot( x = "Leadership Principles",
-                                            y = "Percentage",
-                                            x_title = "Leadership Principles",
-                                            y_title = "Percentage",
-                                            title = "Similarity of the Interviewee's Response to the Leadership Principles",
+            ai_similarity_analysis= gr.BarPlot( x = "leadership principles",
+                                            y = "percentage",
+                                            x_title = "leadership principles",
+                                            y_title = "percentage",
+                                            title = "similarity of the interviewee's response to the leadership principles",
                                             vertical = False,
                                             height= 600,
                                             width= 600,
                                             interactive=True)
         ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', lines=20)
-        btn_clear_board = gr.ClearButton(value="🧹 Clear Board", 
+        btn_clear_board = gr.ClearButton(value="🧹 clear board", 
                                          components=[random_question, 
                                                      candidate_response_str, 
                                                      ai_evaluation, 
