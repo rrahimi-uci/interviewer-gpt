@@ -1,5 +1,11 @@
-from helpers import *
-from prompts import *
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from utility.helpers import *
+from utility.prompts import *
 
 def test():
     # Open the random story response. It is used to define the baseline of similarity 
@@ -20,7 +26,7 @@ def test():
     interview_question = "Tell me about that you solved customer problem"
 
     # Get the response from user. In this part I assumed the response is on the youtube video.
-    res = get_transcript_from_youtube_video('CR8Niz9DrWU&t=6s', 'resources/interview_youtube.txt')
+    res = get_transcript_from_youtube_video('CR8Niz9DrWU&t=6s', 'tests/interview_youtube.txt')
 
     # Summarize the candidate response to the question
     summerized_response = summarize_response(res)
@@ -53,11 +59,11 @@ def test():
     detailed_evaluation_by_ai_str = llm(check_leadership_principle_prompt)
     
     #Save the string to the JSON file
-    with open("outputs/general_evaluation_by_ai.txt", "w") as f:
+    with open("tests/general_evaluation_by_ai.txt", "w") as f:
         json.dump(general_evaluation_by_ai_str, f, indent=4) 
     f.close()
 
-    with open("outputs/detailed_evaluation_by_ai.txt", "w") as f:
+    with open("tests/detailed_evaluation_by_ai.txt", "w") as f:
         json.dump(detailed_evaluation_by_ai_str, f, indent=4)
     f.close()   
 
@@ -68,4 +74,5 @@ def test():
 
 if __name__ == "__main__":
     test()
+    print("Done")
 
