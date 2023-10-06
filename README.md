@@ -14,9 +14,11 @@ The repository is structured as follows:
     5. 'random_story.txt': it is a random story which is used as the basedline for comparing similarity to leadership principles.
     6. 'sample_behavioral_questions.txt': You can add more question to this file in the newline. It will be automatically loaded to question db. 
 - `coachgpt-app.py/`: gradio app to run.
-- `helpers.py/`: Helper functions and classes that are needed.
-- `prompts.py/`: Related prompt for this project.
-- `test.py/`: test function which is using a youtube mock interview for the question of 'Tell me about the time that you solved constumer problem.
+- 'utility/'
+    1. 'helpers.py/`: Helper functions and classes that are needed.
+    2. 'prompts.py/`: Related prompt for this project.
+- 'tests/'
+    1.  'test.py/`: test function which is using a youtube mock interview for the question of 'Tell me about the time that you solved constumer problem.
 
 ## Getting Started
 

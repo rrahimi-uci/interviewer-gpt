@@ -1,5 +1,5 @@
-from helpers import *
-from prompts import *
+from utility.helpers import *
+from utility.prompts import *
 import gradio as gr
 from transformers import pipeline
 import threading
