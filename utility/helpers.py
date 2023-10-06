@@ -53,21 +53,31 @@ class DbOps:
         """
         # create a connection to the database
         self.db_name = db_name
-        conn = sqlite3.connect(db_name)
+        conn = sqlite3.connect(self.db_name)
+        conn.close()
+
+    def create_table(self, table_name):
+        """
+        Creates a new table in the database.
+        Parameters:
+        -----------
+        table_name : str
+            The name of the table to create.
+        columns : str
+            The columns of the table to create.
+        """
+        conn = sqlite3.connect(self.db_name)
 
         # check if the table exists, if not create it
         cursor = conn.cursor()
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='behavioral_question'")
+        cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'")
         table_exists = cursor.fetchone()
         
         if not table_exists:
-            conn.execute('''CREATE TABLE behavioral_question
-                 (question TEXT,
-                 tags TEXT);''')
-        # close the connection
-        conn.close() 
+            conn.execute(f"CREATE TABLE {table_name} (question TEXT, tags TEXT);")
+            conn.close() 
     
-    def add_question(self, question, tags='-'):
+    def add_question(self, table, question, tags='##'):
         """
         Adds a new question to the 'behavioral_question' table in the database.
         Parameters:
@@ -79,13 +89,13 @@ class DbOps:
         """
         conn = sqlite3.connect(self.db_name)
         # insert a new question into the table
-        conn.execute(f"INSERT INTO behavioral_question (question, tags) VALUES ('{question}', '{tags}')")
+        conn.execute(f"INSERT INTO {table} (question, tags) VALUES ('{question}','{tags}')")
         # commit the changes
         conn.commit()
         # close the connection
         conn.close()
     
-    def get_random_element(self):
+    def get_random_element(self, table):
         """
         Returns a random question from the 'behavioral_question' table in the database.
         Returns:
@@ -95,31 +105,42 @@ class DbOps:
         """
         conn = sqlite3.connect(self.db_name)
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM behavioral_question")
+        cursor.execute(f"SELECT COUNT(*) FROM {table}")
         count = cursor.fetchone()[0]
         random_index = random.randint(0, count-1)
-        cursor.execute(f"SELECT question FROM behavioral_question LIMIT 1 OFFSET {random_index}")
+        cursor.execute(f"SELECT question FROM {table} LIMIT 1 OFFSET {random_index}")
         question = cursor.fetchone()[0]
         conn.close()        
         return question
    
-    def populate_db(self, path_to_file):
+    def populate_db(self, table, path_to_file):
        with open(path_to_file, 'r') as f:
             lines = f.readlines()
        
        for line in lines:
             question = line.strip().lower()
-            self.add_question(question)
+            self.add_question(table, question, '##')
 
-def get_random_interview_question():
+def get_random_interview_question(table_name):
         """
         This function returns a random interview question from the database.
         """
         db = DbOps('resources/interview_questions.db')
-        db.populate_db('resources/sample_behavioral_questions.txt')
-        interview_question = db.get_random_element()
-        # Hard coded for Demo
-        #interview_question = 'How do you keep your team motivated during challenging times?'
+
+        db.create_table('coding_interview_questions')
+        db.create_table('leadership_interview_questions')
+        db.create_table('ml_system_design_interview_questions')
+        
+        if table_name == 'coding_interview_questions':
+            db.populate_db('coding_interview_questions', 'resources/sample_coding_questions.txt')
+        
+        if table_name == 'leadership_interview_questions':
+            db.populate_db('leadership_interview_questions', 'resources/sample_behavioral_questions.txt')
+        
+        if table_name == 'ml_system_design_interview_questions':
+            db.populate_db('ml_system_design_interview_questions', 'resources/sample_ML_System_Design_questions.txt')
+        
+        interview_question = db.get_random_element(table_name)
         return interview_question 
 
 def get_transcript_from_youtube_video(video_id, file_path):
