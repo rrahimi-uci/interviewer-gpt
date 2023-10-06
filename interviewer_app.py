@@ -244,4 +244,4 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                   outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis, ai_answer], 
                   api_name="evaluate_by_ai_interviewer")
 
-coach_gpt_gradio_ui.launch(share=True, width=500, height=700, debug=True)
+coach_gpt_gradio_ui.launch(share=True, width=500, height=700, debug=True, favicon_path="guru.ico")
