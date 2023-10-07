@@ -166,9 +166,9 @@ def get_transcript_from_youtube_video(video_id, file_path):
 
 def summarize_response(txt):
     # Instantiate the LLM model
-    llm = OpenAI(temperature = TEMPERTURE, 
+    llm = ChatOpenAI(temperature = TEMPERTURE, 
                  model = MODEL,
-                 max_tokens = MAX_TOKENS,
+                 max_tokens = 2000,
                  openai_api_key = OPENAI_API_KEY)
     
     if len(txt) > int(CHUNK_SIZE) :

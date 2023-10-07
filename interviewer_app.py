@@ -30,6 +30,12 @@ def generate_random_question(choices):
 chat = ChatOpenAI(
                 temperature = TEMPERTURE,
                  model_name="gpt-3.5-turbo", 
+                 max_tokens = 2000, 
+                 openai_api_key = OPENAI_API_KEY)
+
+chat_creative = ChatOpenAI(
+                temperature = 0.5,
+                 model_name="gpt-3.5-turbo", 
                  max_tokens = 3000, 
                  openai_api_key = OPENAI_API_KEY)
 
@@ -51,20 +57,20 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
                         interview_question_asked = random_question
                     )
 
-                check_leadership_principle_prompt_template = PromptTemplate(
+                b_check_leadership_principle_prompt_template = PromptTemplate(
                     input_variables =["candidate_response", "leadership_principles"],
                     template = b_check_principles_promt
                 )
 
                 # Create a prompt template to use in langchain for checking how it has leadership principles in high level
-                check_leadership_principle_prompt = check_leadership_principle_prompt_template.format(
+                b_check_leadership_principle_prompt = b_check_leadership_principle_prompt_template.format(
                     candidate_response = summarized_response_str,
                     leadership_principles = json.dumps(leadership_principles))
                 
                 # Do multi-threading to speed up the process
                 ai_evaluation_thread = ReturnValueThread(target=chat.predict, args=(b_interview_question_query,))
-                ai_detailed_evaluation_thread = ReturnValueThread(target=chat.predict, args=(check_leadership_principle_prompt,))
-                ai_answer_thread = ReturnValueThread(target=chat.predict, args=(b_ai_answer_promt.format(interview_question_asked = random_question),)) 
+                ai_detailed_evaluation_thread = ReturnValueThread(target=chat.predict, args=(b_check_leadership_principle_prompt,))
+                ai_answer_thread = ReturnValueThread(target=chat_creative.predict, args=(b_ai_answer_promt.format(interview_question_asked = random_question),)) 
                 sorted_tuple_list_thread = ReturnValueThread(target=calculate_similarity_to_leadership_principles, args=(leadership_principles, summarized_response_str, random_story))
 
                 ai_evaluation_thread.start()
