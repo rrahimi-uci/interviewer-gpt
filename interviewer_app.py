@@ -13,6 +13,7 @@ with open('resources/random_story.txt', 'r') as f:
 leadership_principles = read_json_file('resources/leadership_principles.json')
 
 def generate_random_question(choices):
+            print("choices", choices)
             if choices == "Coding Question":
                 table = "coding_interview_questions"
                 question = get_random_interview_question(table)
@@ -38,6 +39,7 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
             summarized_response_str = summarize_response(candidate_response_str)
 
             if question_choices == "Leadership and Behavioural Question":
+                print("I am in leadership and behavioural question")
                 
                 # Create a prompt template to use in langchain
                 b_interview_question_prompt_template = PromptTemplate(
@@ -82,6 +84,7 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
             
             elif question_choices == "Coding Question":
                  # Create a prompt template to use in langchain
+                print("I am in coding question")
                 interview_question_prompt_template = PromptTemplate(
                     input_variables =["interview_question_asked","candidate_response"],
                     template = c_interview_question_prompt
@@ -106,6 +109,7 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
                         ai_answer:ai_answer_thread_res}
             else:
                 # Create a prompt template to use in langchain
+                print("I am in ml system design question")
                 interview_question_prompt_template = PromptTemplate(
                     input_variables =["interview_question_asked","candidate_response"],
                     template = ms_interview_question_prompt
@@ -145,9 +149,11 @@ def transcribe(audio):
 
 def change_choice(choice): 
     if choice == "Coding Question" or choice == "ML System Design Question":
-                return [gr.update(visible=False), gr.update(visible=False)]
+                return {audio_visibility:gr.Column.update(visible = False), 
+                        behavioral_evaluation_visibility:gr.Column.update(visible = False)}
     else:
-                return [gr.update(visible=True), gr.update(visible=True)]
+                return {audio_visibility:gr.Column.update(visible = True), 
+                        behavioral_evaluation_visibility:gr.Column.update(visible = True)}
 
 
 with gr.Blocks() as coach_gpt_gradio_ui:
@@ -183,10 +189,9 @@ with gr.Blocks() as coach_gpt_gradio_ui:
     """)
     
     with gr.Column():
-        question_choices = gr.Radio(
-        ["leadership and behavioural question", "ml system design question", "coding question"], 
-        label = "🧘🏻‍♂️ what kind of question do you want me to ask?",
-        value = "leadership and behavioural question")
+        question_choices = gr.Radio(choices=["Leadership and Behavioural Question", "ML System Design Question", "Coding Question"], 
+        label = "🧘🏻‍♂️ What kind of question do you want me to ask?",
+        value="Leadership and Behavioural Question")
          
         btn_random_question = gr.Button("🎲 Generate me random a interview question")
         random_question = gr.Textbox(label="❓interview question", )
@@ -195,8 +200,7 @@ with gr.Blocks() as coach_gpt_gradio_ui:
             candidate_response_audio_input = gr.Audio(label="record your response", 
                                                   type="numpy", 
                                                   source="microphone",
-                                                  show_download_button=True,
-                                                  interactive=True,)
+                                                  show_download_button=True)
         candidate_response_str = gr.Textbox(label="📝 Your response", lines=20)
         
         evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru evaluation of the response")
@@ -204,8 +208,7 @@ with gr.Blocks() as coach_gpt_gradio_ui:
         
         with gr.Column(visible=True) as behavioral_evaluation_visibility:
             ai_detailed_evaluation = gr.Textbox(label= '📑 Details considering Amazon leadership principles', 
-                                            lines=20, 
-                                            interactive=True)
+                                            lines=20)
             ai_similarity_analysis= gr.BarPlot( x = "leadership principles",
                                             y = "percentage",
                                             x_title = "leadership principles",
@@ -213,8 +216,8 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                                             title = "similarity of the interviewee's response to the leadership principles",
                                             vertical = False,
                                             height= 600,
-                                            width= 600,
-                                            interactive=True)
+                                            width= 600)
+        
         ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', lines=20)
         btn_clear_board = gr.ClearButton(value="🧹 clear board", 
                                          components=[random_question, 
@@ -226,7 +229,8 @@ with gr.Blocks() as coach_gpt_gradio_ui:
         
         question_choices.change(fn=change_choice, 
                                 inputs=[question_choices],
-                                outputs=[audio_visibility, behavioral_evaluation_visibility])
+                                outputs=[audio_visibility, 
+                                         behavioral_evaluation_visibility])
         
         btn_random_question.click(fn=generate_random_question, 
                                   inputs=[question_choices],
