@@ -30,7 +30,7 @@ def generate_random_question(choices):
 chat = ChatOpenAI(
                 temperature = TEMPERTURE,
                  model_name="gpt-3.5-turbo", 
-                 max_tokens = MAX_TOKENS, 
+                 max_tokens = 3000, 
                  openai_api_key = OPENAI_API_KEY)
 
 def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_question):
@@ -159,7 +159,7 @@ def change_choice(choice):
 with gr.Blocks() as coach_gpt_gradio_ui:
     gr.Markdown(
     """
-    # 🎤 Welcome to the 🧘🏻‍♂️ **Guru**, your AI Interviewer for ML Engineering Leadership and Manageral roles!
+    # 🎤 Welcome to the 🧘🏻‍♂️ **Guru**, your AI Interviewer for ML Engineering Leadership and Manageral Roles!
     
     ## 🤔 How it Works :
 
@@ -201,25 +201,23 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                                                   type="numpy", 
                                                   source="microphone",
                                                   show_download_button=True)
-        candidate_response_str = gr.Textbox(label="📝 Your response", lines=20)
+        candidate_response_str = gr.Textbox(label="📝 Your response", lines=10, max_lines=100)
         
         evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru evaluation of the response")
-        ai_evaluation = gr.Textbox(label= '🔍 high-level evaluation', lines=20)
+        ai_evaluation = gr.Textbox(label= '🔍 high-level evaluation', max_lines=100)
         
         with gr.Column(visible=True) as behavioral_evaluation_visibility:
             ai_detailed_evaluation = gr.Textbox(label= '📑 Details considering Amazon leadership principles', 
-                                            lines=20)
-            ai_similarity_analysis= gr.BarPlot( x = "leadership principles",
-                                            y = "percentage",
-                                            x_title = "leadership principles",
-                                            y_title = "percentage",
+                                            max_lines=100)
+            ai_similarity_analysis= gr.BarPlot( x = "Leadership Principles",
+                                            y = "Percentage",
+                                            x_title = "Leadership Principles",
+                                            y_title = "Percentage",
                                             title = "similarity of the interviewee's response to the leadership principles",
-                                            vertical = False,
-                                            height= 600,
-                                            width= 600)
+                                            vertical = False)
         
-        ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', lines=20)
-        btn_clear_board = gr.ClearButton(value="🧹 clear board", 
+        ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', max_lines=100)
+        btn_clear_board = gr.ClearButton(value="🧹 Clear Board", 
                                          components=[random_question, 
                                                      candidate_response_str, 
                                                      ai_evaluation, 

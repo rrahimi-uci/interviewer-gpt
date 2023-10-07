@@ -36,14 +36,14 @@ Question : Is candidate response relevant to this leadership principles?.
 
 Instructions:
 1) Validate your answer by highlighting the related text extracted from the candidate response.
-2) Your Response should be less than 3000 words.
-3) Use the format of principle name and your answer. 
+2) Use the format of principle name and your answer.
+3) Use all the leadership principles in your answer.
 
 For example, if you think the candidate response is relevant to the leadership principle "Customer Obsession", then your answer 
 should look like "Customer Obsession": your answer. If it is not relevant to leadership principles, then write 'AI-could not get 
 specific evidence in answer'. 
 
-Create beautiful response like the follwoing format:
+Create a response like the follwoing format:
 
 1- Principle Name;
 AI-Explanation: your answer;
@@ -62,7 +62,6 @@ Please answer the mentioned question based on the following instructions:
 
 1) Make sure you provide a high level hypothetical answer to the question first.
 2) Support your answer with a acceptable story related to the question.
-3) Your Response should be less than 3000 words.
 
 '''
 
@@ -75,10 +74,8 @@ Instructions:
 
 1) It should contains python code.
 2) How the python code is written. Does it follow the best practices?
-3) Does the code run without any errors?
-4) Does the code solve the problem?
-5) Does code have good level of comments, explaing the code?
-2) Your Response should be less than 3000 words.
+3) Does the code solve the problem?
+4) Does code have good level of comments and explaination?
 
 Please use the following template for your response:
 
@@ -122,7 +119,6 @@ Instructions:
 2) It should contains important machine learning models that are used in the system.
 3) It should talk about important offline and online metrics.
 4) It should talk about important features use in models.
-5) Your Response should be less than 4000 words.
 
 Please use the following template for your response:
 
@@ -149,7 +145,6 @@ Please answer the mentioned question based on the following instructions:
 2) It should contains important machine learning models that are used in the system.
 3) It should talk about important offline and online metrics.
 4) It should talk about important features use in machine learning models.
-5) Your Response should be less than 4000 words.
 
 Create a response like the following format:
 
