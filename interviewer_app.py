@@ -175,10 +175,9 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
         less than 2000 words.
         4) Click on the button "Guru Evaluation of the Candidate Response" to evaluate the your response.
         5) For ledership question, we also provide you "Details Considering Different Leadership Principles". These principle are based 
-        on [**Amazon leadership principle**](https://www.amazon.jobs/content/en/our-workplace/leadership-principles 'Amazon leadership principle') 
-        which are accepted in software industry as a guidline.The decomposed response to leadership principles will be displayed in the chart part using cosine 
-        similarity for more insigths. It gives you a sense of how your response is related/ranked to different 
-        leadership principles. 
+        on Amazon leadership principle (https://www.amazon.jobs/content/en/our-workplace/leadership-principles) which are accepted in software industry as 
+        a guidline.The decomposed response to leadership principles will be displayed in the chart part using cosine similarity for more insigths. 
+        It gives you a sense of how your response is related/ranked to different leadership principles. 
         6) Once you are done with the question and answers you can clear the board and start over.
 
     ## 💥 Guru Response Interpretation :
