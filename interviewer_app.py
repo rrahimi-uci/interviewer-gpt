@@ -162,36 +162,35 @@ def change_choice(choice):
                         behavioral_evaluation_visibility:gr.Column.update(visible = True)}
 
 
-with gr.Blocks() as coach_gpt_gradio_ui:
+with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
     gr.Markdown(
     """
-    # 🎤 Welcome to the 🧘🏻‍♂️ **Guru**, your AI Interviewer for ML Engineering Leadership and Manageral Roles!
+    # ✨ Welcome to the 🧘🏻‍♂️ **Guru**, your AI Interviewer for ML Engineering Leadership and Manageral Roles!
     
     ## 🤔 How it Works :
 
-    1) Choose the type of question you want to be asked.
-    2) Click on the button "**Generate Random Interview Question**" to generate a random interview question.
-    3) If you choose leadership question you can record your answer and then we will do transcription OR Enter your response to the question. Try to use 
-       less than **2000** words.
-    4) Click on the button "**AI Evaluation of the Candidate Response**" to evaluate the your response.
-    5) For ledership question, we also provide you "**Details Considering Different Leadership Principles**". These principle are based 
-    on [**Amazon leadership principle**](https://www.amazon.jobs/content/en/our-workplace/leadership-principles 'Amazon leadership principle') 
-    which are accepted in software industry as a guidline.The decomposed response to leadership principles will be displayed in the chart part using cosine 
-    similarity for more insigths. It gives you a sense of how your response is related/ranked to different 
-    leadership principles. 
-    6) Once you are done with the question and answers you can clear the board and start over.
+        1) Choose the type of question you want to be asked.
+        2) Click on the button "Generate Random Interview Question" to generate a random interview question.
+        3) If you choose leadership question you can record your answer and then we will do transcription OR Enter your response to the question. Try to use 
+        less than 2000 words.
+        4) Click on the button "Guru Evaluation of the Candidate Response" to evaluate the your response.
+        5) For ledership question, we also provide you "Details Considering Different Leadership Principles". These principle are based 
+        on [**Amazon leadership principle**](https://www.amazon.jobs/content/en/our-workplace/leadership-principles 'Amazon leadership principle') 
+        which are accepted in software industry as a guidline.The decomposed response to leadership principles will be displayed in the chart part using cosine 
+        similarity for more insigths. It gives you a sense of how your response is related/ranked to different 
+        leadership principles. 
+        6) Once you are done with the question and answers you can clear the board and start over.
 
-    ## 📊 Guru Analysis Inerpretation :
+    ## 💥 Guru Response Interpretation :
     
-    the high-level evaluation result will be displayed in the text box "**general evaluation**". it will rank the answer to:
+    The high-level evaluation result will be displayed in the text box "**general evaluation**". it will rank the answer to:
 
         1) weak, 
         2) average, 
         3) good,
         4) excellent
     
-    we also provide the ai answer to the question to give you a sense of how the ai would answer the question for your 
-    reference and learning.
+        We also provide Guru answer to the question to give you a sense of how the AI would answer the question for your reference and learning.
     """)
     
     with gr.Column():
@@ -252,4 +251,4 @@ with gr.Blocks() as coach_gpt_gradio_ui:
                   outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis, ai_answer], 
                   api_name="evaluate_by_ai_interviewer")
 
-coach_gpt_gradio_ui.launch(share=True, width=500, height=700, debug=True, favicon_path="guru.ico")
+coach_gpt_gradio_ui.launch(share=True, width=500, height=700, debug=True, favicon_path="guru.ico",)
