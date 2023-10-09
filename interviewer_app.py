@@ -196,8 +196,10 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
         question_choices = gr.Radio(choices=["Leadership and Behavioural Question", "ML System Design Question", "Coding Question"], 
         label = "🧘🏻‍♂️ What kind of question do you want me to ask?",
         value="Leadership and Behavioural Question")
-         
-        btn_random_question = gr.Button("🎲 Generate me random a interview question")
+
+        btn_random_question = gr.Button("🎲 Generate me random a interview question", 
+                                            size='sm', scale=1).style(full_width=False)
+        
         random_question = gr.Textbox(label="❓interview question", )
         
         with gr.Column(visible=True) as audio_visibility:
@@ -207,7 +209,7 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
                                                   show_download_button=True)
         candidate_response_str = gr.Textbox(label="📝 Your response", lines=10, max_lines=100)
         
-        evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru evaluation of the response")
+        evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru evaluation of the response", size='sm')
         ai_evaluation = gr.Textbox(label= '🔍 high-level evaluation', max_lines=100)
         
         with gr.Column(visible=True) as behavioral_evaluation_visibility:
@@ -220,14 +222,14 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
                                             title = "similarity of the interviewee's response to the leadership principles",
                                             vertical = False)
         
-        ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', max_lines=100)
+        ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', max_lines = 100)
         btn_clear_board = gr.ClearButton(value="🧹 Clear Board", 
                                          components=[random_question, 
                                                      candidate_response_str, 
                                                      ai_evaluation, 
                                                      ai_detailed_evaluation, 
                                                      ai_similarity_analysis, 
-                                                     ai_answer])
+                                                     ai_answer], size='sm')
         
         question_choices.change(fn=change_choice, 
                                 inputs=[question_choices],
