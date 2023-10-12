@@ -1,0 +1,24 @@
+Write a function that takes in a string and returns the reverse of that string.
+Implement a function that checks if a given string is a palindrome.
+Write a program that prints out the Fibonacci sequence up to a given number.
+Implement a function that takes in an array of integers and returns the sum of all the even numbers in the array.
+Write a function that takes in a string and returns the first non-repeated character in the string.
+Implement a queue using stacks.
+Find the intersection of two arrays.
+Rotate a 2D array 90 degrees.
+Implement a linked list with operations like reverse and merge.
+Check if a binary tree is balanced.
+Find the longest substring without repeating characters.
+Given a sorted array, convert it into a balanced BST.
+Implement a Trie (prefix tree) for efficient word lookup.
+Find the kth element from the end of a linked list.
+Implement an algorithm to detect a cycle in a linked list.
+Given a list of words, find all valid word squares (word squares are formed by words that read the same horizontally and vertically).
+Serialize and deserialize a binary tree.
+Implement an efficient algorithm for the traveling salesman problem (TSP).
+Find the longest increasing subsequence in an array.
+Implement an LRU (Least Recently Used) cache.
+Given a matrix of 1s and 0s, find the largest square of 1s.
+Implement a parallel merge sort algorithm.
+Implement a spell checker using a trie.
+Solve the N-Queens problem (place N queens on an NxN chessboard such that no two queens attack each other).
