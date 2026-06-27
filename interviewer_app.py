@@ -1,9 +1,8 @@
 from utility.helpers import *
 from utility.prompts import *
 import gradio as gr
-from transformers import pipeline
 
-# Open the random story response. It is used to define the baseline of similarity 
+# Open the random story response. It is used to define the baseline of similarity
 # between the candidate response and random story.
 with open('resources/random_story.txt', 'r') as f:
     random_story = f.read()
@@ -27,19 +26,30 @@ def generate_random_question(choices):
                 question = get_random_interview_question(table)
             return question
 
-chat = ChatOpenAI(
-                temperature = TEMPERTURE,
-                 model_name="gpt-3.5-turbo", 
-                 max_tokens = 2000, 
-                 openai_api_key = OPENAI_API_KEY)
+def get_chat_models():
+    """Build the chat models lazily so the UI can be constructed and launched
+    even without a valid OPENAI_API_KEY (the key is only required at evaluation
+    time, when a live request is actually made to the OpenAI API)."""
+    chat = ChatOpenAI(
+                temperature=TEMPERTURE,
+                model=MODEL,
+                max_tokens=2000,
+                api_key=OPENAI_API_KEY)
 
-chat_creative = ChatOpenAI(
-                temperature = 0.5,
-                 model_name="gpt-3.5-turbo", 
-                 max_tokens = 3000, 
-                 openai_api_key = OPENAI_API_KEY)
+    chat_creative = ChatOpenAI(
+                temperature=0.5,
+                model=MODEL,
+                max_tokens=3000,
+                api_key=OPENAI_API_KEY)
+    return chat, chat_creative
+
+def llm_invoke(chat_model, prompt):
+    """Invoke a chat model and return the text content of its response."""
+    return chat_model.invoke(prompt).content
 
 def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_question):
+            chat, chat_creative = get_chat_models()
+
             
             # Summarize the candidate response to the question
             summarized_response_str = summarize_response(candidate_response_str)
@@ -68,9 +78,9 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
                     leadership_principles = json.dumps(leadership_principles))
                 
                 # Do multi-threading to speed up the process
-                ai_evaluation_thread = ReturnValueThread(target=chat.predict, args=(b_interview_question_query,))
-                ai_detailed_evaluation_thread = ReturnValueThread(target=chat.predict, args=(b_check_leadership_principle_prompt,))
-                ai_answer_thread = ReturnValueThread(target=chat_creative.predict, args=(b_ai_answer_promt.format(interview_question_asked = random_question),)) 
+                ai_evaluation_thread = ReturnValueThread(target=llm_invoke, args=(chat, b_interview_question_query))
+                ai_detailed_evaluation_thread = ReturnValueThread(target=llm_invoke, args=(chat, b_check_leadership_principle_prompt))
+                ai_answer_thread = ReturnValueThread(target=llm_invoke, args=(chat_creative, b_ai_answer_promt.format(interview_question_asked = random_question)))
                 sorted_tuple_list_thread = ReturnValueThread(target=calculate_similarity_to_leadership_principles, args=(leadership_principles, summarized_response_str, random_story))
 
                 ai_evaluation_thread.start()
@@ -100,15 +110,15 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
                         interview_question_asked = random_question
                 )
                 # Do multi-threading to speed up the process
-                ai_evaluation_thread = ReturnValueThread(target=chat.predict, args=(interview_question_query,))
-                ai_answer_thread = ReturnValueThread(target=chat.predict, args=(c_ai_answer_promt.format(interview_question_asked = random_question),)) 
+                ai_evaluation_thread = ReturnValueThread(target=llm_invoke, args=(chat, interview_question_query))
+                ai_answer_thread = ReturnValueThread(target=llm_invoke, args=(chat, c_ai_answer_promt.format(interview_question_asked = random_question)))
 
                 ai_evaluation_thread.start()
                 ai_answer_thread.start()
 
                 ai_evaluation_thread_res = ai_evaluation_thread.join()
                 ai_answer_thread_res = ai_answer_thread.join()
-            
+
                 return { ai_evaluation:ai_evaluation_thread_res,
                         ai_detailed_evaluation:' ',
                         ai_similarity_analysis:None,
@@ -125,8 +135,8 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
                         interview_question_asked = random_question
                 )
                 # Do multi-threading to speed up the process
-                ai_evaluation_thread = ReturnValueThread(target=chat.predict, args=(interview_question_query,))
-                ai_answer_thread = ReturnValueThread(target=chat.predict, args=(ms_ai_answer_promt.format(interview_question_asked = random_question),)) 
+                ai_evaluation_thread = ReturnValueThread(target=llm_invoke, args=(chat, interview_question_query))
+                ai_answer_thread = ReturnValueThread(target=llm_invoke, args=(chat, ms_ai_answer_promt.format(interview_question_asked = random_question)))
 
                 ai_evaluation_thread.start()
                 ai_answer_thread.start()
@@ -139,27 +149,42 @@ def evaluate_by_ai_interviewer(question_choices, candidate_response_str, random_
                         ai_similarity_analysis:None,
                         ai_answer:ai_answer_thread_res}
                   
-transcriber = pipeline("automatic-speech-recognition", model="openai/whisper-base.en", max_new_tokens = 1000)
+_transcriber = None
+
+def get_transcriber():
+    """Lazily load the Whisper speech-recognition pipeline on first use so the
+    app starts quickly and does not require torch/transformers (or the model
+    download) unless the audio feature is actually used."""
+    global _transcriber
+    if _transcriber is None:
+        from transformers import pipeline
+        _transcriber = pipeline(
+            "automatic-speech-recognition",
+            model="openai/whisper-base.en",
+            max_new_tokens=1000,
+        )
+    return _transcriber
 
 def transcribe(audio):
     sr, y = audio
     y = y.astype(np.float32)
     y /= np.max(np.abs(y))
 
+    transcriber = get_transcriber()
     res = ''
     splited_audio = np.array_split(y, 10)
     for audio_chunck in splited_audio:
         res += transcriber({"sampling_rate": sr, "raw": audio_chunck})["text"]
-    
+
     return res
 
-def change_choice(choice): 
+def change_choice(choice):
     if choice == "Coding Question" or choice == "ML System Design Question":
-                return {audio_visibility:gr.Column.update(visible = False), 
-                        behavioral_evaluation_visibility:gr.Column.update(visible = False)}
+                return {audio_visibility:gr.update(visible = False),
+                        behavioral_evaluation_visibility:gr.update(visible = False)}
     else:
-                return {audio_visibility:gr.Column.update(visible = True), 
-                        behavioral_evaluation_visibility:gr.Column.update(visible = True)}
+                return {audio_visibility:gr.update(visible = True),
+                        behavioral_evaluation_visibility:gr.update(visible = True)}
 
 
 with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
@@ -197,15 +222,15 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
         label = "🧘🏻‍♂️ What kind of question do you want me to ask?",
         value="Leadership and Behavioural Question")
 
-        btn_random_question = gr.Button("🎲 Generate me random a interview question", 
-                                            size='sm', scale=1).style(full_width=False)
+        btn_random_question = gr.Button("🎲 Generate me random a interview question",
+                                            size='sm', scale=1)
         
         random_question = gr.Textbox(label="❓interview question", )
         
         with gr.Column(visible=True) as audio_visibility:
-            candidate_response_audio_input = gr.Audio(label="record your response", 
-                                                  type="numpy", 
-                                                  source="microphone",
+            candidate_response_audio_input = gr.Audio(label="record your response",
+                                                  type="numpy",
+                                                  sources=["microphone"],
                                                   show_download_button=True)
         candidate_response_str = gr.Textbox(label="📝 Your response", lines=10, max_lines=100)
         
@@ -252,4 +277,7 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
                   outputs = [ai_evaluation, ai_detailed_evaluation, ai_similarity_analysis, ai_answer], 
                   api_name="evaluate_by_ai_interviewer")
 
-coach_gpt_gradio_ui.launch(share=True, width=500, height=700, debug=True, favicon_path="guru.ico",)
+if __name__ == "__main__":
+    # Set GRADIO_SHARE=1 in the environment to expose a temporary public link.
+    share = os.getenv("GRADIO_SHARE", "0") == "1"
+    coach_gpt_gradio_ui.launch(share=share, debug=True, favicon_path="guru.ico")
