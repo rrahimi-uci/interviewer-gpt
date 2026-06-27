@@ -1,0 +1,12 @@
+# GitHub Pages configuration.
+# With a theme set and no index.html/index.md, GitHub Pages renders README.md
+# as the site landing page. jekyll-seo-tag emits <title>/<meta description> and
+# Open Graph tags from the title/description below to help search engines.
+title: "Guru.AI — AI Mock Interview Assistant"
+description: >-
+  An AI-powered mock-interview assistant for ML engineering, leadership/behavioural,
+  and coding interviews. Built with Gradio, LangChain, and the OpenAI API.
+theme: jekyll-theme-cayman
+show_downloads: true
+plugins:
+  - jekyll-seo-tag
