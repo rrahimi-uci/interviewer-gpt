@@ -8,10 +8,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_core.documents import Document
 import numpy as np
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain.chains.summarize import load_summarize_chain
 from langchain_core.prompts import PromptTemplate
 import matplotlib.pyplot as plt
 
@@ -204,12 +202,18 @@ def summarize_response(txt):
         length_function = len,
         add_start_index = True)
 
-        texts = text_splitter.split_text(txt)
-        # Create multiple documents
-        docs = [Document(page_content=t) for t in texts]
-        # Text summarization
-        chain = load_summarize_chain(llm, chain_type='map_reduce')
-        return chain.invoke({"input_documents": docs})["output_text"]
+        chunks = text_splitter.split_text(txt)
+        # Map step: summarize each chunk independently. (Replaces the legacy
+        # load_summarize_chain map_reduce chain removed in LangChain 1.x.)
+        chunk_summaries = [
+            llm.invoke(f"Write a concise summary of the following:\n\n{chunk}").content
+            for chunk in chunks
+        ]
+        # Reduce step: combine the per-chunk summaries into one summary.
+        combined = "\n".join(chunk_summaries)
+        return llm.invoke(
+            f"Write a concise summary that combines the following summaries:\n\n{combined}"
+        ).content
     else:
         return llm.invoke(txt).content
 
