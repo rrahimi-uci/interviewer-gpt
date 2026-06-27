@@ -7,25 +7,29 @@ import sys
 import pandas as pd
 from dotenv import load_dotenv
 from youtube_transcript_api import YouTubeTranscriptApi
-from langchain import OpenAI
-from langchain.chat_models import ChatOpenAI
-from langchain.docstore.document import Document
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.documents import Document
 import numpy as np
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 import matplotlib.pyplot as plt
 
 current_directory = os.getcwd()
-load_dotenv('resources/conf.env')
+# Load configuration from a local .env file (see .env.example). Secrets such as
+# the OpenAI API key must never be committed to the repository.
+load_dotenv()
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-TEMPERTURE = float(os.getenv('TEMPERTURE'))
-MODEL = os.getenv('MODEL')
-MAX_TOKENS = int(os.getenv('MAX_TOKENS'))
-CHUNK_SIZE = int(os.getenv('CHUNK_SIZE'))
-CHUNK_OVERLAP  = int(os.getenv('CHUNK_OVERLAP'))
+# Configuration with safe defaults so the module can be imported even when the
+# .env file is missing or incomplete (the UI still builds; only live LLM calls
+# require a valid OPENAI_API_KEY). "TEMPERTURE" is kept for backward
+# compatibility with older config files.
+TEMPERTURE = float(os.getenv('TEMPERATURE', os.getenv('TEMPERTURE', 0.0)))
+MODEL = os.getenv('MODEL', 'gpt-3.5-turbo')
+MAX_TOKENS = int(os.getenv('MAX_TOKENS', 3000))
+CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 600))
+CHUNK_OVERLAP = int(os.getenv('CHUNK_OVERLAP', 30))
 
 def inner_vector_product(vector_1, vector_2):
     """
@@ -88,8 +92,9 @@ class DbOps:
             The tags associated with the question. Default is '-'.
         """
         conn = sqlite3.connect(self.db_name)
-        # insert a new question into the table
-        conn.execute(f"INSERT INTO {table} (question, tags) VALUES ('{question}','{tags}')")
+        # Insert via a parameterized query so values containing quotes/apostrophes
+        # are handled safely (the table name is an internal constant, not user input).
+        conn.execute(f"INSERT INTO {table} (question, tags) VALUES (?, ?)", (question, tags))
         # commit the changes
         conn.commit()
         # close the connection
@@ -113,12 +118,29 @@ class DbOps:
         conn.close()        
         return question
    
+    def count_rows(self, table):
+        """Returns the number of rows currently stored in ``table``."""
+        conn = sqlite3.connect(self.db_name)
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT COUNT(*) FROM {table}")
+        count = cursor.fetchone()[0]
+        conn.close()
+        return count
+
     def populate_db(self, table, path_to_file):
-       with open(path_to_file, 'r') as f:
+        # Only seed the table when it is empty. Re-running on every question
+        # request would otherwise append the whole file again and again,
+        # filling the table with duplicates.
+        if self.count_rows(table) > 0:
+            return
+
+        with open(path_to_file, 'r') as f:
             lines = f.readlines()
-       
-       for line in lines:
+
+        for line in lines:
             question = line.strip().lower()
+            if not question:
+                continue  # skip blank lines
             self.add_question(table, question, '##')
 
 def get_random_interview_question(table_name):
@@ -155,7 +177,9 @@ def get_transcript_from_youtube_video(video_id, file_path):
     str
         The transcript of the YouTube video.
     """
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    # youtube-transcript-api >= 1.0 uses an instance-based API; fetch() returns a
+    # FetchedTranscript, and to_raw_data() yields the legacy list-of-dicts format.
+    transcript = YouTubeTranscriptApi().fetch(video_id).to_raw_data()
     res = ''
     for txt in transcript:
         res += ' ' + txt['text']
@@ -166,11 +190,11 @@ def get_transcript_from_youtube_video(video_id, file_path):
 
 def summarize_response(txt):
     # Instantiate the LLM model
-    llm = ChatOpenAI(temperature = TEMPERTURE, 
+    llm = ChatOpenAI(temperature = TEMPERTURE,
                  model = MODEL,
                  max_tokens = 2000,
-                 openai_api_key = OPENAI_API_KEY)
-    
+                 api_key = OPENAI_API_KEY)
+
     if len(txt) > int(CHUNK_SIZE) :
         # Split text
         text_splitter = RecursiveCharacterTextSplitter(
@@ -179,15 +203,15 @@ def summarize_response(txt):
         chunk_overlap  = CHUNK_OVERLAP,
         length_function = len,
         add_start_index = True)
-        
+
         texts = text_splitter.split_text(txt)
         # Create multiple documents
         docs = [Document(page_content=t) for t in texts]
         # Text summarization
         chain = load_summarize_chain(llm, chain_type='map_reduce')
-        return chain.run(docs)
+        return chain.invoke({"input_documents": docs})["output_text"]
     else:
-        return llm(txt)
+        return llm.invoke(txt).content
 
 def calculate_similarity_to_leadership_principles(leadership_principles, 
                                                   summarized_response, 
@@ -196,7 +220,7 @@ def calculate_similarity_to_leadership_principles(leadership_principles,
     This function calculates the similarity of the summarized response to the leadership principles.
     """
     # Define embedding
-    embedding = OpenAIEmbeddings(client=None)
+    embedding = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
 
     leadership_principles_embedding = {}
     # Embedding leadership principles
