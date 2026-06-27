@@ -3,13 +3,13 @@
 # their current safe releases.
 
 # Core web UI
-gradio==5.50.0
+gradio==6.19.0
 
-# LLM / orchestration (modern split-package LangChain)
-langchain==0.3.30
-langchain-core==0.3.86
-langchain-openai==0.3.35
-langchain-text-splitters==0.3.11
+# LLM / orchestration (LangChain 1.x split packages)
+langchain==1.3.11
+langchain-core==1.4.8
+langchain-openai==1.3.3
+langchain-text-splitters==1.1.2
 openai==2.44.0
 
 # Speech-to-text for the behavioural audio feature

@@ -133,11 +133,14 @@ contained should be considered compromised and revoked at
 The codebase was modernized to current libraries and verified end-to-end (UI build, server boot,
 live OpenAI call, and the full evaluation path):
 
-- **LangChain** upgraded from `0.0.327` to the split packages (`langchain` 0.3,
-  `langchain-openai`, `langchain-text-splitters`); calls use `.invoke()` instead of the removed
-  `.predict()` / `llm(...)` / `.run()` APIs.
-- **Gradio** upgraded from `4.0.2` to `5.x` (`gr.update`, `Audio(sources=...)`, removed `.style()`
-  and `launch(width/height)`); the server launch is guarded under `if __name__ == "__main__"`.
+- **LangChain** upgraded from `0.0.327` to the 1.x split packages (`langchain` 1.x,
+  `langchain-core`, `langchain-openai`, `langchain-text-splitters`); calls use `.invoke()` instead
+  of the removed `.predict()` / `llm(...)` / `.run()` APIs, and the removed `load_summarize_chain`
+  was replaced with a small manual map-reduce summarizer.
+- **Gradio** upgraded from `4.0.2` to `6.x` (`gr.update`, `Audio(sources=...)`, horizontal
+  `BarPlot` via `x`/`y` + `sort` instead of the removed `vertical=`, removed `.style()` /
+  `launch(width/height)` / `show_download_button`); the server launch is guarded under
+  `if __name__ == "__main__"`.
 - **youtube-transcript-api** updated to the v1 instance API (`YouTubeTranscriptApi().fetch(...)`).
 - Chat models and the Whisper transcriber are built lazily, so the UI starts without an API key
   or a model download.

@@ -230,8 +230,7 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
         with gr.Column(visible=True) as audio_visibility:
             candidate_response_audio_input = gr.Audio(label="record your response",
                                                   type="numpy",
-                                                  sources=["microphone"],
-                                                  show_download_button=True)
+                                                  sources=["microphone"])
         candidate_response_str = gr.Textbox(label="📝 Your response", lines=10, max_lines=100)
         
         evaluate_by_ai = gr.Button("🧘🏻‍♂️ Guru evaluation of the response", size='sm')
@@ -240,12 +239,14 @@ with gr.Blocks(title='Guru.AI') as coach_gpt_gradio_ui:
         with gr.Column(visible=True) as behavioral_evaluation_visibility:
             ai_detailed_evaluation = gr.Textbox(label= '📑 Details considering Amazon leadership principles', 
                                             max_lines=100)
-            ai_similarity_analysis= gr.BarPlot( x = "Leadership Principles",
-                                            y = "Percentage",
-                                            x_title = "Leadership Principles",
-                                            y_title = "Percentage",
+            # Horizontal bar chart: in Gradio 6 the removed `vertical=False` is
+            # expressed by putting the quantitative field on x and the category on y.
+            ai_similarity_analysis= gr.BarPlot( x = "Percentage",
+                                            y = "Leadership Principles",
+                                            x_title = "Percentage",
+                                            y_title = "Leadership Principles",
                                             title = "similarity of the interviewee's response to the leadership principles",
-                                            vertical = False)
+                                            sort = "-x")
         
         ai_answer = gr.Textbox(label= '🧘🏻‍♂️ Guru answer to the question', max_lines = 100)
         btn_clear_board = gr.ClearButton(value="🧹 Clear Board", 
