@@ -1,3 +1,14 @@
+# Secrets / local configuration
+.env
+resources/conf.env
 
-__pycache__/helpers.cpython-311.pyc
-*.pyc
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# OS / editor
+.DS_Store
