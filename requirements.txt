@@ -13,7 +13,7 @@ langchain-text-splitters==1.1.2
 openai==2.44.0
 
 # Speech-to-text for the behavioural audio feature
-transformers==5.12.1
+transformers==5.13.0
 torch==2.12.1
 
 # Data / numerics
