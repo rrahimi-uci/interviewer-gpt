@@ -10,7 +10,7 @@ langchain==1.3.11
 langchain-core==1.4.8
 langchain-openai==1.3.3
 langchain-text-splitters==1.1.2
-openai==2.44.0
+openai==2.45.0
 
 # Speech-to-text for the behavioural audio feature
 transformers==5.13.0
