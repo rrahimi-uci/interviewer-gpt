@@ -14,7 +14,7 @@ openai==2.44.0
 
 # Speech-to-text for the behavioural audio feature
 transformers==5.13.0
-torch==2.12.1
+torch==2.13.0
 
 # Data / numerics
 numpy==2.5.0
