@@ -3,7 +3,7 @@
 # their current safe releases.
 
 # Core web UI
-gradio==6.19.0
+gradio==6.20.0
 
 # LLM / orchestration (LangChain 1.x split packages)
 langchain==1.3.11
