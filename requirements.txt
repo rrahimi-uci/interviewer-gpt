@@ -8,7 +8,7 @@ gradio==6.19.0
 # LLM / orchestration (LangChain 1.x split packages)
 langchain==1.3.11
 langchain-core==1.4.8
-langchain-openai==1.3.3
+langchain-openai==1.3.5
 langchain-text-splitters==1.1.2
 openai==2.44.0
 
